@@ -1,0 +1,23 @@
+{
+  "name": "cardioidofgold",
+  "version": "1.0.0",
+  "description": "personal page",
+  "main": "index.js",
+  "dependencies": {
+    "three": "^0.112.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastianlam/cardioidofgold.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sebastianlam/cardioidofgold/issues"
+  },
+  "homepage": "https://github.com/sebastianlam/cardioidofgold#readme"
+}
