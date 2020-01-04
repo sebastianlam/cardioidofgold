@@ -23,6 +23,8 @@
 		<script>
 			var renderer = new THREE.WebGLRenderer();
 			var scene = new THREE.Scene();
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2();
 			var loader = new THREE.GLTFLoader();
 			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000 );
 			var controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -50,6 +52,18 @@
 					}
 				);
 			}
+			function onMouseMove( event ) {
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			}
+			function render() {
+				raycaster.setFromCamera( mouse, camera );
+				var intersects = raycaster.intersectObjects( scene.children );
+				for ( var i = 0; i < intersects.length; i++ ) {
+					intersects[ i ].object.material.color.set( 0xff0000 );
+				}
+				renderer.render( scene, camera );
+			}
 
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
@@ -58,6 +72,8 @@
 			controls.maxPolarAngle = Math.PI/2;
 			controls.minPolarAngle = Math.PI/2;
 			controls.enablePan = false;
+			window.addEventListener( 'mousemove', onMouseMove, false );
+			window.requestAnimationFrame(render);
 			controls.update();
 
 			camera.position.set( 0, 0, 5 );
