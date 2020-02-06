@@ -3,8 +3,14 @@
 	<head>
 		<title>Your ominously spinning head.</title>
 		<style>
-			body { margin: 0; }
-			canvas { width: 100%; height: 100% }
+			html, body {
+				margin: 0;
+				height: 100%;
+			}
+			#c {
+				width: 100%;
+				height: 100%
+			}
 			#info {
 				color: White;
 				font-family: Helvetica;
@@ -29,14 +35,16 @@
 			}
 		</style>
 	</head>
-	<div id="info">THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
-	<div id="info2">Solve the world's problems through either decapitation or preservation of this part.</div>
 	<body id="info">
+		<div id="info">THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
+		<div id="info2">Solve the world's problems through either decapitation or preservation of this part.</div>
+		<canvas id="c"></canvas>
 		<script src="js/three.min.js"></script>
 		<script src="js/GLTFLoader.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script>
-			var renderer = new THREE.WebGLRenderer();
+			const canvas = document.querySelector('#c');
+			var renderer = new THREE.WebGLRenderer({canvas: canvas});
 			var scene = new THREE.Scene();
 			var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2();
@@ -56,7 +64,8 @@
 				model.scene.position.set(0,-1,0);
 			}
 			function loadObject(){
-				loader.load('faceSculpting.glb',
+				loader.load(
+					'faceSculpting.glb',
 					function ( gltf ) {
 						model = gltf;
 						scene.add( model.scene );
@@ -67,18 +76,6 @@
 					}
 				);
 			}
-			function onMouseMove( event ) {
-				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-			}
-			function render() {
-				raycaster.setFromCamera( mouse, camera );
-				var intersects = raycaster.intersectObjects( scene.children );
-				for ( var i = 0; i < intersects.length; i++ ) {
-					intersects[ i ].object.material.color.set( 0xff0000 );
-				}
-				renderer.render( scene, camera );
-			}
 
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
@@ -87,14 +84,14 @@
 			controls.maxPolarAngle = Math.PI/2;
 			controls.minPolarAngle = Math.PI/2;
 			controls.enablePan = false;
-			window.addEventListener( 'mousemove', onMouseMove, false );
+
 
 			controls.update();
 
 			camera.position.set( 0, 0, 5 );
 			scene.add( light );
 			loadObject()
-			window.requestAnimationFrame(render);
+
 			animate();
 
 		</script>
