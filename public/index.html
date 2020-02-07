@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<title>Your ominously spinning head.</title>
 	<style>
@@ -62,8 +61,6 @@
 	Solve the world's problems through either inspiration or preservation of this part.
 </div>
 
-
-
 <body id="snapp">
 	<script src="js/three.min.js"></script>
 	<script src="js/GLTFLoader.js"></script>
@@ -93,24 +90,23 @@
     }
 
 		function animate() {
-
       if (rendersnap(renderer)) {
       const canvas = renderer.domElement;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       }
-
 			controls.update();
 			renderer.render(scene, camera);
       requestAnimationFrame(animate);
-		};
+		}
 
 		function importsetup() {
 			model.scene.position.set(0, -1.2, 0);
 		}
 
 		function loadObject() {
-			loader.load('faceSculpting.glb',
+			loader.load(
+				'faceSculpting.glb',
 				function(gltf) {
 					model = gltf;
 					scene.add(model.scene);
@@ -119,7 +115,7 @@
 				function(error) {
 					console.log("loading");;
 				}
-			);
+			)
 		}
 
 		function toggle () {
@@ -142,5 +138,4 @@
 		animate();
 	</script>
 </body>
-
 </html>
