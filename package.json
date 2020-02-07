@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "personal page",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "http-server": "^0.12.1"
+  },
   "devDependencies": {},
   "scripts": {
+    "serve": "http-serve ./public",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "aws s3 sync ./public s3://cardioidofgold.com"
   },

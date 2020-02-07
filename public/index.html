@@ -1,99 +1,122 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Your ominously spinning head.</title>
-		<style>
-			html, body {
-				margin: 0;
-				height: 100%;
-			}
-			#c {
-				width: 100%;
-				height: 100%
-			}
-			#info {
-				color: White;
-				font-family: Helvetica;
-				font-size:5vw;
-				position: absolute;
-				top: 5px;
-				width: 100%;
-				text-align: center;
-				z-index: 100;
-				display:block;
-			}
-			#info2 {
-				color: White;
-				font-family: Helvetica;
-				font-size:2vw;
-				position: absolute;
-				bottom: 10px;
-				width: 100%;
-				text-align: center;
-				z-index: 100;
-				display:block;
-			}
-		</style>
-	</head>
-	<body id="info">
-		<div id="info">THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
-		<div id="info2">Solve the world's problems through either decapitation or preservation of this part.</div>
-		<canvas id="c"></canvas>
-		<script src="js/three.min.js"></script>
-		<script src="js/GLTFLoader.js"></script>
-		<script src="js/OrbitControls.js"></script>
-		<script>
-			const canvas = document.querySelector('#c');
-			var renderer = new THREE.WebGLRenderer({canvas: canvas});
-			var scene = new THREE.Scene();
-			var raycaster = new THREE.Raycaster();
-			var mouse = new THREE.Vector2();
-			var loader = new THREE.GLTFLoader();
-			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000 );
-			var controls = new THREE.OrbitControls( camera, renderer.domElement );
-			var model;
-			var material = new THREE.MeshStandardMaterial();
-			var light = new THREE.HemisphereLight( 0xffcc99, 0x000000, 0.5 );
-			function animate() {
-				requestAnimationFrame( animate );
-				model.scene.rotation.y += 0.005;
-				controls.update();
-				renderer.render( scene, camera );
-			};
-			function init(){
-				model.scene.position.set(0,-1,0);
-			}
-			function loadObject(){
-				loader.load(
-					'faceSculpting.glb',
-					function ( gltf ) {
-						model = gltf;
-						scene.add( model.scene );
-						init()
-					},
-					undefined, function ( error ) {
-						console.error( error );
-					}
-				);
-			}
+
+<head>
+	<title>Your ominously spinning head.</title>
+	<style>
+		canvas {
+			width: 100%;
+			height: 100%;
+		}
+
+		#snapp{
+			margin: 0px
+		}
+
+		#info {
+			color: White;
+			font-family: Helvetica;
+			font-size: 4vw;
+			position: absolute;
+			top: 30px;
+			width: 100%;
+			text-align: center;
+			z-index: 100;
+			display: block;
+		}
+
+		#info2 {
+			color: White;
+			font-family: Helvetica;
+			font-size: 3vw;
+			position: absolute;
+			bottom: 30px;
+			width: 100%;
+			text-align: center;
+			z-index: 100;
+		}
+
+		#option1 {
+			color: White;
+			font-family: Helvetica;
+			font-size: 2vw;
+			position: absolute;
+			top: 300px;
+			width: 100%;
+			text-align: center;
+			z-index: 100;
+		}
+	</style>
+</head>
+<div id="info">
+	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
+	<button type="button" onclick="toggle()">Alter my course!</button>
+</div>
+<div id="info2">
+	Solve the world's problems through either inspiration or preservation of this part.
+</div>
 
 
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-			controls.enableDamping = true;
-			controls.maxPolarAngle = Math.PI/2;
-			controls.minPolarAngle = Math.PI/2;
-			controls.enablePan = false;
 
+<body id="snapp">
+	<script src="js/three.min.js"></script>
+	<script src="js/GLTFLoader.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script>
 
+		var renderer = new THREE.WebGLRenderer();
+		var scene = new THREE.Scene();
+		var loader = new THREE.GLTFLoader();
+		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+		var controls = new THREE.OrbitControls(camera, renderer.domElement);
+		var model;
+		var material = new THREE.MeshStandardMaterial();
+		var light = new THREE.HemisphereLight(0xff99aa, 0x000000, 0.5);
+		var preset = true
+
+		function animate() {
+			requestAnimationFrame(animate);
+			model.scene.rotation.y += 0;
 			controls.update();
+			renderer.render(scene, camera);
+		};
 
-			camera.position.set( 0, 0, 5 );
-			scene.add( light );
-			loadObject()
+		function importsetup() {
+			model.scene.position.set(0, -1.2, 0);
+		}
 
-			animate();
+		function loadObject() {
+			loader.load('faceSculpting.glb',
+				function(gltf) {
+					model = gltf;
+					scene.add(model.scene);
+					importsetup()
+				},
+				function(error) {
+					console.log("loading");;
+				}
+			);
+		}
 
-		</script>
-	</body>
+		function toggle () {
+			preset = !preset
+			controls.autoRotate = preset
+		}
+
+		controls.autoRotate = true;
+		controls.autoRotateSpeed = 40;
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		document.body.appendChild(renderer.domElement);
+		controls.enableDamping = true;
+		controls.maxPolarAngle = (Math.PI + 0.7) / 2;
+		controls.minPolarAngle = (Math.PI - 0.7) / 2;
+		controls.enablePan = false;
+
+		camera.position.set(0, 0, 5);
+		scene.add(light);
+		loadObject()
+		animate();
+	</script>
+</body>
+
 </html>
