@@ -54,7 +54,12 @@
 </head>
 <div id="info">
 	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
+	<button type="button" onclick="toggle()">VISION</button>
+	<button type="button" onclick="toggle()">TUNES</button>
+	<button type="button" onclick="toggle()">WORDS</button>
+	<button type="button" onclick="toggle()">AMBIENCE</button>
 	<button type="button" onclick="toggle()">Alter my course!</button>
+	<div>d for default</div>
 </div>
 <div id="info2">
 	Solve the world's problems through either inspiration or preservation of this part.
@@ -64,6 +69,7 @@
 	<script src="js/three.min.js"></script>
 	<script src="js/GLTFLoader.js"></script>
 	<script src="js/OrbitControls.js"></script>
+	<script src="js/tween.umd.js"></script>
 	<script>
 
 		var renderer = new THREE.WebGLRenderer();
@@ -73,7 +79,7 @@
 		var controls = new THREE.OrbitControls(camera, renderer.domElement);
 		var model;
 		var material = new THREE.MeshStandardMaterial();
-		var light = new THREE.HemisphereLight(0xff88ff, 0x008800, 0.5);
+		var light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
 		var preset = true
 
     function rendersnap(renderer) {
@@ -117,13 +123,36 @@
 			)
 		}
 
+		function swith_v (ttt) {
+			if (ttt === "ear") {
+				camera.position.set(5, 0, 0);
+			}
+			if (ttt === "otherear") {
+				camera.position.set(-5, 0, 0);
+			}
+		}
+
 		function toggle () {
 			preset = !preset
-			controls.autoRotate = preset
+			controls.autoRotate = preset;
+		}
+
+		window.onkeydown = function(event){
+			if(event.keyCode === 32) {
+				console.log("it is now:", controls.autoRotate);
+				event.preventDefault();
+				toggle();
+			}
+			if(event.keyCode === 68) {
+				event.preventDefault();
+				camera.position.set(0, 0, 5);
+				preset = false;
+				controls.autoRotate = preset;
+			}
 		}
 
 		controls.autoRotate = true;
-		controls.autoRotateSpeed = 40;
+		controls.autoRotateSpeed = 10;
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		document.body.appendChild(renderer.domElement);
 		controls.enableDamping = true;
