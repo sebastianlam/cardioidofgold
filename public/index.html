@@ -54,10 +54,10 @@
 </head>
 <div id="info">
 	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
-	<button type="button" onclick="toggle()">VISION</button>
-	<button type="button" onclick="toggle()">TUNES</button>
-	<button type="button" onclick="toggle()">WORDS</button>
-	<button type="button" onclick="toggle()">AMBIENCE</button>
+	<button type="button" onclick="switch_v('VISION')">VISION</button>
+	<button type="button" onclick="switch_v('TUNES')">TUNES</button>
+	<button type="button" onclick="switch_v('WORDS')">WORDS</button>
+	<button type="button" onclick="switch_v('AMBIENCE')">AMBIENCE</button>
 	<button type="button" onclick="toggle()">Alter my course!</button>
 	<div>d for default</div>
 </div>
@@ -80,7 +80,12 @@
 		var model;
 		var material = new THREE.MeshStandardMaterial();
 		var light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
-		var preset = true
+		var preset = true;
+		var focused = false;
+		var organss = {'VISION': [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
+										'TUNES': [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
+										'WORDS': [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
+										'AMBIENCE': [0.080312546657849, -0.47493251433984374, 1.378197649116327]};
 
     function rendersnap(renderer) {
       const canvas = renderer.domElement;
@@ -123,12 +128,42 @@
 			)
 		}
 
-		function swith_v (ttt) {
-			if (ttt === "ear") {
-				camera.position.set(5, 0, 0);
+		function switch_v (organ) {
+			if (organ === 'VISION') {
+				if (controls.autoRotate == true) {
+					toggle();
+					focused = true;
+					camera.position.set(-0.047434535332279655, -0.1788981553339662, 1.6070452025245767);
+				} else {
+					camera.position.set(-0.047434535332279655, -0.1788981553339662, 1.6070452025245767);
+				}
 			}
-			if (ttt === "otherear") {
-				camera.position.set(-5, 0, 0);
+			if (organ === 'TUNES') {
+				if (controls.autoRotate == true) {
+					toggle();
+					focused = true;
+					camera.position.set(-1.5859118908118746, -0.6146201839876595, 0.56562303537245);
+				} else {
+					camera.position.set(-1.5859118908118746, -0.6146201839876595, 0.56562303537245);
+				}
+			}
+			if (organ === 'WORDS') {
+				if (controls.autoRotate == true) {
+					toggle();
+					focused = true;
+					camera.position.set(0.4002358318768384, -0.8014289061473174, 2.2678613534906424);
+				} else {
+					camera.position.set(0.4002358318768384, -0.8014289061473174, 2.2678613534906424);
+				}
+			}
+			if (organ === 'AMBIENCE') {
+				if (controls.autoRotate == true) {
+					toggle();
+					focused = true;
+					camera.position.set(0.080312546657849, -0.47493251433984374, 1.378197649116327);
+				} else {
+					camera.position.set(0.080312546657849, -0.47493251433984374, 1.378197649116327);
+				}
 			}
 		}
 
@@ -162,7 +197,7 @@
 
 		camera.position.set(0, 0, 5);
 		scene.add(light);
-		loadObject()
+		loadObject();
 		animate();
 	</script>
 </body>
