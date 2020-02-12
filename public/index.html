@@ -105,41 +105,38 @@
 
 		function altswitch (endPos) {
 			var startQuaternion = camera.quaternion.clone();
+			var startPos = camera.position.clone()
 			// Apply the tracking controls to a cloned dummy camera so
 			// that we can get the final quaternion.
-			var dummyCamera = camera.clone();
+			let dummyCamera = camera.clone();
 			dummyCamera.position.set(endPos[0], endPos[1], endPos[2]);
-			var dummyControls = new THREE.OrbitControls(dummyCamera, renderer.domElement);
+			dummyCamera.lookAt(0,0,0)
+			let dummyControls = new THREE.OrbitControls(dummyCamera, renderer.domElement);
 			dummyControls.target.set(0,0,0)
 			dummyControls.update()
-			var endQuaternion = dummyCamera.quaternion.clone();
+			// let endQuaternion = dummyCamera.quaternion
 
-			// Disable VR controls, so that it doesn't compete with
-			// the tween for control  of the camera.
-			// (Note: now you need to check if the controls are
-			// null in the animate function)
 			controls.dispose();
 			controls = null;
 
-			console.log("startQuaternion:", startQuaternion)
-			console.log("endQuaternion:", endQuaternion)
-			// console.log("camera.position:", camera.position)
-			// console.log("endPos:", endPos)
-			// new TWEEN.Tween(camera.position)
-			new TWEEN.Tween(startQuaternion)
-			// .to({x: endPos[0], y: endPos[1], z: endPos[2]}, 1000)
-			.to(endQuaternion, 1000)
-			.onUpdate(function (v) {
-				console.log("v:", v)
+			new TWEEN.Tween(camera.position)
+			.to({x: endPos[0], y: endPos[1], z: endPos[2]}, 1000)
+			// .interpolation(function (k) {
 			  // Slerp the camera quaternion as well.
 			  // timestamp is the eased time value from the tween.
-			  THREE.Quaternion.slerp(
-			    startQuaternion, endQuaternion, camera.quaternion, v);
-				// camera.position.set(p[0], p[1], p[2])
+			  // THREE.Quaternion.slerp(
+			    // startQuaternion, endQuaternion, camera.quaternion, k);
+			    // startQuaternion, dummyCamera.quaternion, camera.quaternion, k);
+			// 	return TWEEN.Interpolation.Linear
+			// })
+			.onUpdate(function (v) {
+				 camera.lookAt(0,0,0)
 			})
 			.onComplete(function() {
 				controls = new THREE.OrbitControls(camera, renderer.domElement);
+				controls.target.set(endPos[0],endPos[1],endPos[2])
 				controls.target.set(0,0,0)
+				camera.updateProjectionMatrix()
 			}).start();
 		}
 
