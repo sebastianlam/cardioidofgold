@@ -54,10 +54,10 @@
 </head>
 <div id="info">
 	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
-	<button type="button" onclick="switch_v('VISION')">VISION</button>
-	<button type="button" onclick="switch_v('TUNES')">TUNES</button>
-	<button type="button" onclick="switch_v('WORDS')">WORDS</button>
-	<button type="button" onclick="switch_v('AMBIENCE')">AMBIENCE</button>
+	<button type="button" onclick="switch_v('vison')">VISION</button>
+	<button type="button" onclick="switch_v('tunes')">TUNES</button>
+	<button type="button" onclick="switch_v('words')">WORDS</button>
+	<button type="button" onclick="switch_v('ambience')">AMBIENCE</button>
 	<button type="button" onclick="toggle()">Alter my course!</button>
 	<div>d for default</div>
 </div>
@@ -82,10 +82,59 @@
 		var light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
 		var preset = true;
 		var focused = false;
-		var organss = {'VISION': [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
-										'TUNES': [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
-										'WORDS': [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
-										'AMBIENCE': [0.080312546657849, -0.47493251433984374, 1.378197649116327]};
+		var organs = {
+										vision:   [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
+										tunes:    [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
+										words:    [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
+										ambience: [0.080312546657849, -0.47493251433984374, 1.378197649116327]
+								 }
+
+		// function focus (obj, target) {
+		//  var dummyCamera = camera.clone();
+		//  controls = new THREE.OrbitControls(dummyCamera);
+		//  controls.target.set(obj.point.x, obj.point.y, obj.point.z);
+		//  new TWEEN.Tween(camera.position)
+		//    .to(target, 1000)
+		//    .onComplete(function() {
+		//      transitioning = false;
+		//      controls.dispose();
+		//      controls = new THREE.TrackballControls(camera);
+		//      controls.target.set(obj.point.x, obj.point.y, obj.point.z);
+		//  }).start();
+		// }
+
+		function altswitch (obj, target) {
+			var startQuaternion = camera.quaternion.clone();
+
+			// Apply the tracking controls to a cloned dummy camera so
+			// that we can get the final quaternion.
+			var dummyCamera = camera.clone();
+			dummyCamera.position.set(target.x, target.y, target.z);
+			var dummyControls = new THREE.OrbitControls(dummyCamera);
+			dummyControls.target.set(obj.point.x, obj.point.y, obj.point.z);
+			dummyControls.update();
+
+			// Disable VR controls, so that it doesn't compete with
+			// the tween for control  of the camera.
+			// (Note: now you need to check if the controls are
+			// null in the animate function)
+			controls.dispose();
+			controls = null;
+
+			new TWEEN.Tween(camera.position)
+			.to(target, 1000)
+			.onUpdate(function (timestamp){
+
+			  // Slerp the camera quaternion as well.
+			  // timestamp is the eased time value from the tween.
+			  THREE.Quaternion.slerp(
+			    startQuaternion, dummyCamera.quaternion, camera.quaternion, timestamp);
+			})
+			.onComplete(function() {
+			  controls = new THREE.OrbitControls(camera);
+			  controls.target.set(obj.point.x, obj.point.y, obj.point.z);
+			}).start();
+		}
 
     function rendersnap(renderer) {
       const canvas = renderer.domElement;
@@ -129,41 +178,10 @@
 		}
 
 		function switch_v (organ) {
-			if (organ === 'VISION') {
-				if (controls.autoRotate == true) {
-					toggle();
-					focused = true;
-					camera.position.set(-0.047434535332279655, -0.1788981553339662, 1.6070452025245767);
-				} else {
-					camera.position.set(-0.047434535332279655, -0.1788981553339662, 1.6070452025245767);
-				}
-			}
-			if (organ === 'TUNES') {
-				if (controls.autoRotate == true) {
-					toggle();
-					focused = true;
-					camera.position.set(-1.5859118908118746, -0.6146201839876595, 0.56562303537245);
-				} else {
-					camera.position.set(-1.5859118908118746, -0.6146201839876595, 0.56562303537245);
-				}
-			}
-			if (organ === 'WORDS') {
-				if (controls.autoRotate == true) {
-					toggle();
-					focused = true;
-					camera.position.set(0.4002358318768384, -0.8014289061473174, 2.2678613534906424);
-				} else {
-					camera.position.set(0.4002358318768384, -0.8014289061473174, 2.2678613534906424);
-				}
-			}
-			if (organ === 'AMBIENCE') {
-				if (controls.autoRotate == true) {
-					toggle();
-					focused = true;
-					camera.position.set(0.080312546657849, -0.47493251433984374, 1.378197649116327);
-				} else {
-					camera.position.set(0.080312546657849, -0.47493251433984374, 1.378197649116327);
-				}
+			let o = camera.position
+			o.set.apply(o, organs[organ])
+			if (controls.autoRotate == true) {
+				toggle();
 			}
 		}
 
