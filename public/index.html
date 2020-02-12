@@ -54,7 +54,7 @@
 </head>
 <div id="info">
 	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
-	<button type="button" onclick="switch_v('vison')">VISION</button>
+	<button type="button" onclick="switch_v('vision')">VISION</button>
 	<button type="button" onclick="switch_v('tunes')">TUNES</button>
 	<button type="button" onclick="switch_v('words')">WORDS</button>
 	<button type="button" onclick="switch_v('ambience')">AMBIENCE</button>
@@ -103,16 +103,16 @@
 		//  }).start();
 		// }
 
-		function altswitch (obj, target) {
+		function altswitch (endPos) {
 			var startQuaternion = camera.quaternion.clone();
-
 			// Apply the tracking controls to a cloned dummy camera so
 			// that we can get the final quaternion.
 			var dummyCamera = camera.clone();
-			dummyCamera.position.set(target.x, target.y, target.z);
-			var dummyControls = new THREE.OrbitControls(dummyCamera);
-			dummyControls.target.set(obj.point.x, obj.point.y, obj.point.z);
-			dummyControls.update();
+			dummyCamera.position.set(endPos[0], endPos[1], endPos[2]);
+			var dummyControls = new THREE.OrbitControls(dummyCamera, renderer.domElement);
+			dummyControls.target.set(0,0,0)
+			dummyControls.update()
+			var endQuaternion = dummyCamera.quaternion.clone();
 
 			// Disable VR controls, so that it doesn't compete with
 			// the tween for control  of the camera.
@@ -121,18 +121,25 @@
 			controls.dispose();
 			controls = null;
 
-			new TWEEN.Tween(camera.position)
-			.to(target, 1000)
-			.onUpdate(function (timestamp){
-
+			console.log("startQuaternion:", startQuaternion)
+			console.log("endQuaternion:", endQuaternion)
+			// console.log("camera.position:", camera.position)
+			// console.log("endPos:", endPos)
+			// new TWEEN.Tween(camera.position)
+			new TWEEN.Tween(startQuaternion)
+			// .to({x: endPos[0], y: endPos[1], z: endPos[2]}, 1000)
+			.to(endQuaternion, 1000)
+			.onUpdate(function (v) {
+				console.log("v:", v)
 			  // Slerp the camera quaternion as well.
 			  // timestamp is the eased time value from the tween.
 			  THREE.Quaternion.slerp(
-			    startQuaternion, dummyCamera.quaternion, camera.quaternion, timestamp);
+			    startQuaternion, endQuaternion, camera.quaternion, v);
+				// camera.position.set(p[0], p[1], p[2])
 			})
 			.onComplete(function() {
-			  controls = new THREE.OrbitControls(camera);
-			  controls.target.set(obj.point.x, obj.point.y, obj.point.z);
+				controls = new THREE.OrbitControls(camera, renderer.domElement);
+				controls.target.set(0,0,0)
 			}).start();
 		}
 
@@ -148,13 +155,18 @@
       return needResize;
     }
 
-		function animate() {
+		function animate(t) {
+			// console.log("animate:", t)
       if (rendersnap(renderer)) {
       const canvas = renderer.domElement;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       }
-			controls.update();
+			if (controls != null) {
+				controls.update()
+			} else {
+				TWEEN.update(t)
+			}
 			renderer.render(scene, camera);
       requestAnimationFrame(animate);
 		}
@@ -178,11 +190,12 @@
 		}
 
 		function switch_v (organ) {
-			let o = camera.position
-			o.set.apply(o, organs[organ])
+			var endPos = organs[organ]
+			// camera.position.set.apply(camera.position, endPos)
 			if (controls.autoRotate == true) {
 				toggle();
 			}
+			altswitch(endPos)
 		}
 
 		function toggle () {
