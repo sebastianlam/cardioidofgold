@@ -86,7 +86,8 @@
 										vision:   [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
 										tunes:    [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
 										words:    [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
-										ambience: [0.080312546657849, -0.47493251433984374, 1.378197649116327]
+										ambience: [0.080312546657849, -0.47493251433984374, 1.378197649116327],
+										defaulting:	[0, 0, 5]
 								 }
 
 		// function focus (obj, target) {
@@ -120,15 +121,17 @@
 			controls = null;
 
 			new TWEEN.Tween(camera.position)
-			.to({x: endPos[0], y: endPos[1], z: endPos[2]}, 1000)
-			// .interpolation(function (k) {
-			  // Slerp the camera quaternion as well.
-			  // timestamp is the eased time value from the tween.
-			  // THREE.Quaternion.slerp(
-			    // startQuaternion, endQuaternion, camera.quaternion, k);
-			    // startQuaternion, dummyCamera.quaternion, camera.quaternion, k);
-			// 	return TWEEN.Interpolation.Linear
-			// })
+			.to({x: endPos[0], y: endPos[1], z: endPos[2]}, 2000)
+
+				// .interpolation(function (k) {
+				//   Slerp the camera quaternion as well.
+				//   timestamp is the eased time value from the tween.
+				//   THREE.Quaternion.slerp(
+				//     startQuaternion, endQuaternion, camera.quaternion, k);
+				//     startQuaternion, dummyCamera.quaternion, camera.quaternion, k);
+				// 	return TWEEN.Interpolation.Linear
+				// })
+			.easing (TWEEN.Easing.Exponential.InOut)
 			.onUpdate(function (v) {
 				 camera.lookAt(0,0,0)
 			})
@@ -137,7 +140,13 @@
 				controls.target.set(endPos[0],endPos[1],endPos[2])
 				controls.target.set(0,0,0)
 				camera.updateProjectionMatrix()
+				controls.enableDamping = true;
+				controls.maxPolarAngle = (Math.PI + 0.7) / 2;
+				controls.minPolarAngle = (Math.PI - 0.7) / 2;
+				controls.enablePan = false;
+				controls.autoRotateSpeed = 10;
 			}).start();
+			controls.enableDamping = true;
 		}
 
     function rendersnap(renderer) {
@@ -208,7 +217,7 @@
 			}
 			if(event.keyCode === 68) {
 				event.preventDefault();
-				camera.position.set(0, 0, 5);
+				switch_v ('defaulting')
 				preset = false;
 				controls.autoRotate = preset;
 			}
