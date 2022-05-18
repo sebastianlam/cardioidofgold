@@ -8,22 +8,22 @@
 			border: solid;
 			color: #FFFFFF;
 			border-radius: 40px;
+			margin: 10px 10px 10px 10px;
 		}
 
 		html,
 		body {
-			margin: 0;
 			background-color: black;
 		}
 
 		canvas {
 			width: 100%;
 			height: 100%;
-			display: flex;
+			display: block;
 		}
 
 		#snapp {
-			margin: 0px;
+			color: #fff;
 		}
 
 		#info {
@@ -31,8 +31,6 @@
 			font-family: Helvetica;
 			font-size: 4vw;
 			position: absolute;
-			top: 30px;
-			width: 100%;
 			text-align: center;
 			z-index: 100;
 			display: block;
@@ -43,8 +41,6 @@
 			font-family: Helvetica;
 			font-size: 3vw;
 			position: absolute;
-			bottom: 30px;
-			width: 100%;
 			text-align: center;
 			z-index: 100;
 		}
@@ -54,14 +50,12 @@
 			font-family: Helvetica;
 			font-size: 2vw;
 			position: absolute;
-			top: 300px;
-			width: 100%;
 			text-align: center;
 			z-index: 100;
 		}
 	</style>
 </head>
-<div id="info">
+<heading id="info">
 	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
 	<button type="button" onclick="switch_v('vision')">VISION</button>
 	<button type="button" onclick="switch_v('tunes')">TUNES</button>
@@ -69,10 +63,10 @@
 	<button type="button" onclick="switch_v('ambience')">AMBIENCE</button>
 	<button type="button" onclick="toggle()">Alter my course!</button>
 	<div>d for default</div>
-</div>
-<div id="info2">
+</heading>
+<footer id="info2">
 	Solve the world's problems through either inspiration or preservation of this part.
-</div>
+</footer>
 
 <body id="snapp">
 	<script src="js/three.min.js"></script>
