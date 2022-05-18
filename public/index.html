@@ -89,28 +89,18 @@
 		var material = new THREE.MeshStandardMaterial();
 		var light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
 		var preset = true;
-		var focused = false;
 		var organs = {
-			vision: [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
-			tunes: [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
-			words: [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
-			ambience: [0.080312546657849, -0.47493251433984374, 1.378197649116327],
-			defaulting: [0, 0, 5]
+			vision:
+				[-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
+			tunes:
+				[-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
+			words:
+				[0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
+			ambience:
+				[0.080312546657849, -0.47493251433984374, 1.378197649116327],
+			defaulting:
+				[0, 0, 5]
 		}
-
-		// function focus (obj, target) {
-		//  var dummyCamera = camera.clone();
-		//  controls = new THREE.OrbitControls(dummyCamera);
-		//  controls.target.set(obj.point.x, obj.point.y, obj.point.z);
-		//  new TWEEN.Tween(camera.position)
-		//    .to(target, 1000)
-		//    .onComplete(function() {
-		//      transitioning = false;
-		//      controls.dispose();
-		//      controls = new THREE.TrackballControls(camera);
-		//      controls.target.set(obj.point.x, obj.point.y, obj.point.z);
-		//  }).start();
-		// }
 
 		function altswitch(endPos) {
 			var startQuaternion = camera.quaternion.clone();
@@ -130,19 +120,11 @@
 
 			new TWEEN.Tween(camera.position)
 				.to({
-					x: endPos[0],
-					y: endPos[1],
-					z: endPos[2]
-				}, 2000)
-
-				// .interpolation(function (k) {
-				//   Slerp the camera quaternion as well.
-				//   timestamp is the eased time value from the tween.
-				//   THREE.Quaternion.slerp(
-				//     startQuaternion, endQuaternion, camera.quaternion, k);
-				//     startQuaternion, dummyCamera.quaternion, camera.quaternion, k);
-				// 	return TWEEN.Interpolation.Linear
-				// })
+						x: endPos[0],
+						y: endPos[1],
+						z: endPos[2]
+					},
+					2000)
 				.easing(TWEEN.Easing.Exponential.InOut)
 				.onUpdate(function (v) {
 					camera.lookAt(0, 0, 0)
@@ -156,7 +138,7 @@
 					controls.maxPolarAngle = (Math.PI + 0.7) / 2;
 					controls.minPolarAngle = (Math.PI - 0.7) / 2;
 					controls.enablePan = false;
-					controls.autoRotateSpeed = 10;
+					controls.autoRotateSpeed = 50;
 				}).start();
 			controls.enableDamping = true;
 		}
@@ -236,7 +218,7 @@
 		}
 
 		controls.autoRotate = true;
-		controls.autoRotateSpeed = 10;
+		controls.autoRotateSpeed = 50;
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		document.body.appendChild(renderer.domElement);
 		controls.enableDamping = true;
