@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Your ominously spinning head.</title>
 	<style>
-    html, body {
-      margin: 0;
-      background-color: black;
-    }
+		* {
+			border: solid;
+			color: #FFFFFF;
+			border-radius: 40px;
+		}
+
+		html,
+		body {
+			margin: 0;
+			background-color: black;
+		}
 
 		canvas {
 			width: 100%;
 			height: 100%;
-      display: block;
+			display: flex;
 		}
 
-		#snapp{
+		#snapp {
 			margin: 0px;
 		}
 
@@ -29,6 +37,7 @@
 			z-index: 100;
 			display: block;
 		}
+
 		#info2 {
 			color: White;
 			font-family: Helvetica;
@@ -71,7 +80,6 @@
 	<script src="js/OrbitControls.js"></script>
 	<script src="js/tween.umd.js"></script>
 	<script>
-
 		var renderer = new THREE.WebGLRenderer();
 		var scene = new THREE.Scene();
 		var loader = new THREE.GLTFLoader();
@@ -83,12 +91,12 @@
 		var preset = true;
 		var focused = false;
 		var organs = {
-										vision:   [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
-										tunes:    [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
-										words:    [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
-										ambience: [0.080312546657849, -0.47493251433984374, 1.378197649116327],
-										defaulting:	[0, 0, 5]
-								 }
+			vision: [-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
+			tunes: [-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
+			words: [0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
+			ambience: [0.080312546657849, -0.47493251433984374, 1.378197649116327],
+			defaulting: [0, 0, 5]
+		}
 
 		// function focus (obj, target) {
 		//  var dummyCamera = camera.clone();
@@ -104,16 +112,16 @@
 		//  }).start();
 		// }
 
-		function altswitch (endPos) {
+		function altswitch(endPos) {
 			var startQuaternion = camera.quaternion.clone();
 			var startPos = camera.position.clone()
 			// Apply the tracking controls to a cloned dummy camera so
 			// that we can get the final quaternion.
 			let dummyCamera = camera.clone();
 			dummyCamera.position.set(endPos[0], endPos[1], endPos[2]);
-			dummyCamera.lookAt(0,0,0)
+			dummyCamera.lookAt(0, 0, 0)
 			let dummyControls = new THREE.OrbitControls(dummyCamera, renderer.domElement);
-			dummyControls.target.set(0,0,0)
+			dummyControls.target.set(0, 0, 0)
 			dummyControls.update()
 			// let endQuaternion = dummyCamera.quaternion
 
@@ -121,7 +129,11 @@
 			controls = null;
 
 			new TWEEN.Tween(camera.position)
-			.to({x: endPos[0], y: endPos[1], z: endPos[2]}, 2000)
+				.to({
+					x: endPos[0],
+					y: endPos[1],
+					z: endPos[2]
+				}, 2000)
 
 				// .interpolation(function (k) {
 				//   Slerp the camera quaternion as well.
@@ -131,50 +143,50 @@
 				//     startQuaternion, dummyCamera.quaternion, camera.quaternion, k);
 				// 	return TWEEN.Interpolation.Linear
 				// })
-			.easing (TWEEN.Easing.Exponential.InOut)
-			.onUpdate(function (v) {
-				 camera.lookAt(0,0,0)
-			})
-			.onComplete(function() {
-				controls = new THREE.OrbitControls(camera, renderer.domElement);
-				controls.target.set(endPos[0],endPos[1],endPos[2])
-				controls.target.set(0,0,0)
-				camera.updateProjectionMatrix()
-				controls.enableDamping = true;
-				controls.maxPolarAngle = (Math.PI + 0.7) / 2;
-				controls.minPolarAngle = (Math.PI - 0.7) / 2;
-				controls.enablePan = false;
-				controls.autoRotateSpeed = 10;
-			}).start();
+				.easing(TWEEN.Easing.Exponential.InOut)
+				.onUpdate(function (v) {
+					camera.lookAt(0, 0, 0)
+				})
+				.onComplete(function () {
+					controls = new THREE.OrbitControls(camera, renderer.domElement);
+					controls.target.set(endPos[0], endPos[1], endPos[2])
+					controls.target.set(0, 0, 0)
+					camera.updateProjectionMatrix()
+					controls.enableDamping = true;
+					controls.maxPolarAngle = (Math.PI + 0.7) / 2;
+					controls.minPolarAngle = (Math.PI - 0.7) / 2;
+					controls.enablePan = false;
+					controls.autoRotateSpeed = 10;
+				}).start();
 			controls.enableDamping = true;
 		}
 
-    function rendersnap(renderer) {
-      const canvas = renderer.domElement;
-      const pixelRatio = window.devicePixelRatio;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const needResize = canvas.width !== width || canvas.height !== height;
-      if (needResize) {
-        renderer.setSize(width, height);
-      }
-      return needResize;
-    }
+		function rendersnap(renderer) {
+			const canvas = renderer.domElement;
+			const pixelRatio = window.devicePixelRatio;
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+			const needResize = canvas.width !== width || canvas.height !== height;
+			if (needResize) {
+				renderer.setSize(width, height);
+			}
+			return needResize;
+		}
 
 		function animate(t) {
 			// console.log("animate:", t)
-      if (rendersnap(renderer)) {
-      const canvas = renderer.domElement;
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      }
+			if (rendersnap(renderer)) {
+				const canvas = renderer.domElement;
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+			}
 			if (controls != null) {
 				controls.update()
 			} else {
 				TWEEN.update(t)
 			}
 			renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+			requestAnimationFrame(animate);
 		}
 
 		function importsetup() {
@@ -184,18 +196,18 @@
 		function loadObject() {
 			loader.load(
 				'faceSculpting.glb',
-				function(gltf) {
+				function (gltf) {
 					model = gltf;
 					scene.add(model.scene);
 					importsetup()
 				},
-				function(error) {
+				function (error) {
 					console.log("loading");;
 				}
 			)
 		}
 
-		function switch_v (organ) {
+		function switch_v(organ) {
 			var endPos = organs[organ]
 			// camera.position.set.apply(camera.position, endPos)
 			if (controls.autoRotate == true) {
@@ -204,20 +216,20 @@
 			altswitch(endPos)
 		}
 
-		function toggle () {
+		function toggle() {
 			preset = !preset
 			controls.autoRotate = preset;
 		}
 
-		window.onkeydown = function(event){
-			if(event.keyCode === 32) {
+		window.onkeydown = function (event) {
+			if (event.keyCode === 32) {
 				console.log("it is now:", controls.autoRotate);
 				event.preventDefault();
 				toggle();
 			}
-			if(event.keyCode === 68) {
+			if (event.keyCode === 68) {
 				event.preventDefault();
-				switch_v ('defaulting')
+				switch_v('defaulting')
 				preset = false;
 				controls.autoRotate = preset;
 			}
@@ -238,4 +250,5 @@
 		animate();
 	</script>
 </body>
+
 </html>
