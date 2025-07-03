@@ -1,7 +1,23 @@
 {
+  "name": "cardioidofgold",
+  "version": "1.0.0",
+  "description": "Testing personal page",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "http-server public -o -c-1",
+    "start": "http-server public -p 8080",
+    "build": "echo 'Static site - no build needed'",
+    "lint": "echo 'No linting configured'",
+    "test": "echo 'No tests configured'",
+    "serve:prod": "http-server public -p 8080 --cors",
+    "clean": "echo 'No build artifacts to clean'"
+  },
   "dependencies": {
     "three": "^0.144.0",
     "troisjs": "^0.3.4",
     "vue": "^3.2.39"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }

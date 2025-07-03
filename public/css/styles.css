@@ -1,0 +1,304 @@
+/* Modern CSS Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+/* Canvas Styles */
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* UI Container */
+.ui-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header UI */
+.header-ui {
+    pointer-events: auto;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    padding: 2rem;
+    text-align: center;
+}
+
+.title {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: linear-gradient(45deg, #ffffff, #888888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Button Controls */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn.active {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #ffffff;
+}
+
+/* Keyboard hints */
+.keyboard-hints {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* Footer UI */
+.footer-ui {
+    pointer-events: auto;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    padding: 2rem;
+    text-align: center;
+    margin-top: auto;
+}
+
+.subtitle {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    opacity: 0.8;
+    font-weight: 300;
+    line-height: 1.4;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+.loading-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.loading-progress-container {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #ffffff, #888888);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Error Messages */
+.error-message {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 1001;
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+/* Performance Stats (for development) */
+.stats {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    z-index: 999;
+    display: none; /* Hidden by default */
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-ui, .footer-ui {
+        padding: 1.5rem 1rem;
+    }
+    
+    .controls {
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .loading-indicator {
+        padding: 1rem;
+    }
+    
+    .error-message {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        min-width: 120px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    canvas {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+    
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus states for accessibility */
+.btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* Dark mode support (already dark, but for consistency) */
+@media (prefers-color-scheme: dark) {
+    /* Already optimized for dark mode */
+}
+
+/* Print styles */
+@media print {
+    .ui-container {
+        display: none;
+    }
+} 

@@ -1,0 +1,93 @@
+{
+  "name": "The Contemplative Head - Interactive 3D Experience",
+  "short_name": "Contemplative Head",
+  "description": "An immersive 3D interactive experience featuring a contemplative head sculpture with advanced visual effects, particle systems, and spatial audio",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["art", "entertainment", "education"],
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "The Contemplative Head main view"
+    },
+    {
+      "src": "screenshot-narrow.png", 
+      "sizes": "640x1136",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile view with controls"
+    }
+  ],
+  "features": [
+    "cross-platform",
+    "low-bandwidth",
+    "installable"
+  ],
+  "shortcuts": [
+    {
+      "name": "Vision Mode",
+      "short_name": "Vision",
+      "description": "Switch to vision perspective",
+      "url": "/?view=vision",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Tunes Mode", 
+      "short_name": "Tunes",
+      "description": "Switch to musical perspective",
+      "url": "/?view=tunes",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings", 
+      "description": "Open advanced settings",
+      "url": "/?settings=true",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+} 

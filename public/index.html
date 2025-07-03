@@ -1,229 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<title>Your ominously spinning head.</title>
-	<style>
-		* {
-			border: solid;
-			color: #FFFFFF;
-			border-radius: 40px;
-			margin: 10px 10px 10px 10px;
-		}
-
-		html,
-		body {
-			background-color: black;
-		}
-
-		canvas {
-			width: 100%;
-			height: 100%;
-			display: block;
-		}
-
-		#snapp {
-			color: #fff;
-		}
-
-		#info {
-			color: White;
-			font-family: Helvetica;
-			font-size: 4vw;
-			position: absolute;
-			text-align: center;
-			z-index: 100;
-			display: block;
-		}
-
-		#info2 {
-			color: White;
-			font-family: Helvetica;
-			font-size: 3vw;
-			position: absolute;
-			text-align: center;
-			z-index: 100;
-		}
-
-		#option1 {
-			color: White;
-			font-family: Helvetica;
-			font-size: 2vw;
-			position: absolute;
-			text-align: center;
-			z-index: 100;
-		}
-	</style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Interactive 3D head sculpture with immersive camera controls">
+	<title>The Contemplative Head - Interactive 3D Experience</title>
+	
+	<!-- PWA Meta Tags -->
+	<meta name="theme-color" content="#000000">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="Contemplative Head">
+	<meta name="msapplication-TileColor" content="#000000">
+	<meta name="msapplication-tap-highlight" content="no">
+	
+	<!-- PWA Manifest -->
+	<link rel="manifest" href="manifest.json">
+	
+	<!-- Icons -->
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<link rel="apple-touch-icon" href="favicon.ico">
+	
+	<!-- Preload fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+	
+	<!-- Styles -->
+	<link rel="stylesheet" href="css/styles.css">
 </head>
-<heading id="info">
-	<div>THE DAMNED HEAD (THAT REFUSES TO INTROSPECT).</div>
-	<button type="button" onclick="switch_v('vision')">VISION</button>
-	<button type="button" onclick="switch_v('tunes')">TUNES</button>
-	<button type="button" onclick="switch_v('words')">WORDS</button>
-	<button type="button" onclick="switch_v('ambience')">AMBIENCE</button>
-	<button type="button" onclick="toggle()">Alter my course!</button>
-	<div>d for default</div>
-</heading>
-<footer id="info2">
-	Solve the world's problems through either inspiration or preservation of this part.
-</footer>
 
-<body id="snapp">
+<body>
+	<!-- Loading Indicator -->
+	<div id="loading-indicator" class="loading-indicator">
+		<div class="loading-spinner"></div>
+		<div id="loading-text" class="loading-text">Loading 3D Model...</div>
+		<div class="loading-progress-container">
+			<div id="loading-progress" class="loading-progress"></div>
+		</div>
+	</div>
+
+	<!-- UI Overlay -->
+	<div class="ui-container">
+		<!-- Header UI -->
+		<div class="header-ui">
+			<h1 class="title">The Contemplative Head</h1>
+			<div class="controls">
+				<button id="vision-btn" class="btn" type="button">Vision</button>
+				<button id="tunes-btn" class="btn" type="button">Tunes</button>
+				<button id="words-btn" class="btn" type="button">Words</button>
+				<button id="ambience-btn" class="btn" type="button">Ambience</button>
+				<button id="toggle-btn" class="btn active" type="button">Stop Rotation</button>
+			</div>
+			<div class="keyboard-hints">
+				Use V, T, W, A keys for views • D for default • Space to toggle rotation
+			</div>
+		</div>
+
+		<!-- Footer UI -->
+		<div class="footer-ui">
+			<p class="subtitle">
+				Solve the world's problems through either inspiration or preservation of this part.
+			</p>
+		</div>
+	</div>
+	<!-- Scripts -->
 	<script src="js/three.min.js"></script>
 	<script src="js/GLTFLoader.js"></script>
 	<script src="js/OrbitControls.js"></script>
 	<script src="js/tween.umd.js"></script>
+	
+	<!-- Advanced systems -->
+	<script src="js/post-processing.js"></script>
+	<script src="js/particle-systems.js"></script>
+	<script src="js/advanced-ui.js"></script>
+	<script src="js/audio-system.js"></script>
+	
+	<script src="js/performance.js"></script>
+	<script src="js/app.js"></script>
+	
+	<!-- PWA Registration -->
 	<script>
-		var renderer = new THREE.WebGLRenderer();
-		var scene = new THREE.Scene();
-		var loader = new THREE.GLTFLoader();
-		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-		var controls = new THREE.OrbitControls(camera, renderer.domElement);
-		var model;
-		var material = new THREE.MeshStandardMaterial();
-		var light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
-		var preset = true;
-		var organs = {
-			vision:
-				[-0.047434535332279655, -0.1788981553339662, 1.6070452025245767],
-			tunes:
-				[-1.5859118908118746, -0.6146201839876595, 0.56562303537245],
-			words:
-				[0.4002358318768384, -0.8014289061473174, 2.2678613534906424],
-			ambience:
-				[0.080312546657849, -0.47493251433984374, 1.378197649116327],
-			defaulting:
-				[0, 0, 5]
-		}
-
-		function altswitch(endPos) {
-			var startQuaternion = camera.quaternion.clone();
-			var startPos = camera.position.clone()
-			// Apply the tracking controls to a cloned dummy camera so
-			// that we can get the final quaternion.
-			let dummyCamera = camera.clone();
-			dummyCamera.position.set(endPos[0], endPos[1], endPos[2]);
-			dummyCamera.lookAt(0, 0, 0)
-			let dummyControls = new THREE.OrbitControls(dummyCamera, renderer.domElement);
-			dummyControls.target.set(0, 0, 0)
-			dummyControls.update()
-			// let endQuaternion = dummyCamera.quaternion
-
-			controls.dispose();
-			controls = null;
-
-			new TWEEN.Tween(camera.position)
-				.to({
-						x: endPos[0],
-						y: endPos[1],
-						z: endPos[2]
-					},
-					2000)
-				.easing(TWEEN.Easing.Exponential.InOut)
-				.onUpdate(function (v) {
-					camera.lookAt(0, 0, 0)
-				})
-				.onComplete(function () {
-					controls = new THREE.OrbitControls(camera, renderer.domElement);
-					controls.target.set(endPos[0], endPos[1], endPos[2])
-					controls.target.set(0, 0, 0)
-					camera.updateProjectionMatrix()
-					controls.enableDamping = true;
-					controls.maxPolarAngle = (Math.PI + 0.7) / 2;
-					controls.minPolarAngle = (Math.PI - 0.7) / 2;
-					controls.enablePan = false;
-					controls.autoRotateSpeed = 50;
-				}).start();
-			controls.enableDamping = true;
-		}
-
-		function rendersnap(renderer) {
-			const canvas = renderer.domElement;
-			const pixelRatio = window.devicePixelRatio;
-			const width = window.innerWidth;
-			const height = window.innerHeight;
-			const needResize = canvas.width !== width || canvas.height !== height;
-			if (needResize) {
-				renderer.setSize(width, height);
-			}
-			return needResize;
-		}
-
-		function animate(t) {
-			// console.log("animate:", t)
-			if (rendersnap(renderer)) {
-				const canvas = renderer.domElement;
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-			}
-			if (controls != null) {
-				controls.update()
-			} else {
-				TWEEN.update(t)
-			}
-			renderer.render(scene, camera);
-			requestAnimationFrame(animate);
-		}
-
-		function importsetup() {
-			model.scene.position.set(0, -1.2, 0);
-		}
-
-		function loadObject() {
-			loader.load(
-				'faceSculpting.glb',
-				function (gltf) {
-					model = gltf;
-					scene.add(model.scene);
-					importsetup()
-				},
-				function (error) {
-					console.log("loading");;
+		// Register service worker for PWA functionality
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/sw.js')
+					.then(registration => {
+						console.log('SW registered: ', registration);
+						
+						// Check for updates
+						registration.addEventListener('updatefound', () => {
+							const newWorker = registration.installing;
+							newWorker.addEventListener('statechange', () => {
+								if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+									// New update available
+									if (confirm('New version available! Reload to update?')) {
+										window.location.reload();
+									}
+								}
+							});
+						});
+					})
+					.catch(registrationError => {
+						console.log('SW registration failed: ', registrationError);
+					});
+			});
+			
+			// Listen for service worker messages
+			navigator.serviceWorker.addEventListener('message', event => {
+				const { type, data } = event.data;
+				
+				switch (type) {
+					case 'ASSET_CACHED':
+						console.log('Asset cached:', data.url);
+						break;
+					case 'RESOURCES_UPDATED':
+						console.log('Resources updated in background');
+						break;
+					case 'CACHE_CLEARED':
+						console.log('Cache cleared:', data.cacheName);
+						break;
 				}
-			)
+			});
 		}
-
-		function switch_v(organ) {
-			var endPos = organs[organ]
-			// camera.position.set.apply(camera.position, endPos)
-			if (controls.autoRotate == true) {
-				toggle();
-			}
-			altswitch(endPos)
+		
+		// Handle PWA install prompt
+		let deferredPrompt;
+		window.addEventListener('beforeinstallprompt', (e) => {
+			// Prevent the mini-infobar from appearing
+			e.preventDefault();
+			// Save the event for later use
+			deferredPrompt = e;
+			
+			// Show custom install button or notification
+			console.log('PWA install prompt available');
+			
+			// You could show a custom install button here
+			setTimeout(() => {
+				if (confirm('Install this app for the best experience?')) {
+					deferredPrompt.prompt();
+					deferredPrompt.userChoice.then((choiceResult) => {
+						if (choiceResult.outcome === 'accepted') {
+							console.log('User accepted PWA install');
+						}
+						deferredPrompt = null;
+					});
+				}
+			}, 5000); // Show after 5 seconds
+		});
+		
+		// Handle app installed
+		window.addEventListener('appinstalled', (evt) => {
+			console.log('PWA was installed');
+		});
+		
+		// Handle URL parameters for deep linking
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.get('view')) {
+			// Wait for app to load then switch view
+			window.addEventListener('load', () => {
+				setTimeout(() => {
+					const view = urlParams.get('view');
+					if (window.headApp && typeof window.headApp.switchView === 'function') {
+						window.headApp.switchView(view);
+					}
+				}, 2000);
+			});
 		}
-
-		function toggle() {
-			preset = !preset
-			controls.autoRotate = preset;
+		
+		if (urlParams.get('settings') === 'true') {
+			// Open settings when app loads
+			window.addEventListener('load', () => {
+				setTimeout(() => {
+					if (window.headApp && window.headApp.uiManager) {
+						window.headApp.uiManager.toggleSettings();
+					}
+				}, 1000);
+			});
 		}
-
-		window.onkeydown = function (event) {
-			if (event.keyCode === 32) {
-				console.log("it is now:", controls.autoRotate);
-				event.preventDefault();
-				toggle();
-			}
-			if (event.keyCode === 68) {
-				event.preventDefault();
-				switch_v('defaulting')
-				preset = false;
-				controls.autoRotate = preset;
-			}
-		}
-
-		controls.autoRotate = true;
-		controls.autoRotateSpeed = 50;
-		renderer.setSize(window.innerWidth, window.innerHeight);
-		document.body.appendChild(renderer.domElement);
-		controls.enableDamping = true;
-		controls.maxPolarAngle = (Math.PI + 0.7) / 2;
-		controls.minPolarAngle = (Math.PI - 0.7) / 2;
-		controls.enablePan = false;
-
-		camera.position.set(0, 0, 5);
-		scene.add(light);
-		loadObject();
-		animate();
 	</script>
 </body>
 
